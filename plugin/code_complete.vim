@@ -243,31 +243,137 @@ endfunction
 " C templates
 let g:template = {}
 let g:template['c'] = {}
-let g:template['c']['cc'] = "/*  */\<left>\<left>\<left>"
-let g:template['c']['cd'] = "/**<  */\<left>\<left>\<left>"
-let g:template['c']['de'] = "#define     "
-let g:template['c']['in'] = "#include    \"\"\<left>"
-let g:template['c']['is'] = "#include  <>\<left>"
+let g:template['c']['cm'] = "/*  */".repeat("\<left>",3)
+let g:template['c']['cmm'] = "/**<  */".repeat("\<left>",3)
+let g:template['c']['de'] = "#define "
+let g:template['c']['un'] = "#undef "
+let g:template['c']['pr'] = "#pragma once"
+let g:template['c']['in'] = "#include \"\"\<left>"
+let g:template['c']['is'] = "#include <>\<left>"
 let g:template['c']['ff'] = "#ifndef  \<c-r>=GetFileName()\<cr>\<CR>#define  \<c-r>=GetFileName()\<cr>".
             \repeat("\<cr>",5)."#endif  /*\<c-r>=GetFileName()\<cr>*/".repeat("\<up>",3)
-let g:template['c']['for'] = "for( ".g:rs."...".g:re." ; ".g:rs."...".g:re." ; ".g:rs."...".g:re." )\<cr>{\<cr>".
-            \g:rs."...".g:re."\<cr>}\<cr>"
-let g:template['c']['main'] = "int main(int argc, char \*argv\[\])\<cr>{\<cr>".g:rs."...".g:re."\<cr>}"
-let g:template['c']['switch'] = "switch ( ".g:rs."...".g:re." )\<cr>{\<cr>case ".g:rs."...".g:re." :\<cr>break;\<cr>case ".
+let g:template['c']['for'] = "for(".g:rs."define".g:re."; ".g:rs."condition".g:re."; ".g:rs."increment".g:re."){\<cr>".
+            \g:rs."code".g:re."\<cr>}\<cr>"
+let g:template['c']['main'] = "int main(int argc, char \*argv\[\]){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['switch'] = "switch (".g:rs."input".g:re."){\<cr>case ".g:rs."comp".g:re." :\<cr>break;\<cr>case ".
             \g:rs."...".g:re." :\<cr>break;\<cr>default :\<cr>break;\<cr>}"
-let g:template['c']['if'] = "if( ".g:rs."...".g:re." )\<cr>{\<cr>".g:rs."...".g:re."\<cr>}"
-let g:template['c']['while'] = "while( ".g:rs."...".g:re." )\<cr>{\<cr>".g:rs."...".g:re."\<cr>}"
-let g:template['c']['ife'] = "if( ".g:rs."...".g:re." )\<cr>{\<cr>".g:rs."...".g:re."\<cr>} else\<cr>{\<cr>".g:rs."...".
+let g:template['c']['case'] = "case ".g:rs."...".g:re.":\<cr>break;"
+let g:template['c']['if'] = "if(".g:rs."condition".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['while'] = "while(".g:rs."condition".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['elif'] = "if(".g:rs."condition".g:re."){\<cr>".g:rs."code".g:re."\<cr>} else{\<cr>".g:rs."code".
             \g:re."\<cr>}"
+let g:template['c']['ts'] = "typedef struct{\<cr>\<cr>}".g:rs."type_name".g:re.";"
+let g:template['c']['st'] = "struct {\<cr>\<cr>};".repeat("\<up>",2).repeat("\<right>",5)
+
+" ---------------------------------------------
+" C methods
+let g:template['c']['mv'] = "void ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mpv'] = "void *".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mi'] = "int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mli'] = "long int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mlli'] = "long long int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mui'] = "unsigned int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['muli'] = "unsigned long int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mulli'] = "unsigned long long int ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mc'] = "char ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mpc'] = "char *".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mcc'] = "const char *".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['mf'] = "float ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['md'] = "double ".g:rs."method".g:re."(".g:rs."args".g:re."){\<cr>".g:rs."code".g:re."\<cr>}"
+let g:template['c']['pv'] = "void *;\<left>"
+let g:template['c']['ch'] = "char ;\<left>"
+let g:template['c']['cc'] = "const char *;\<left>"
+let g:template['c']['pc'] = "char *;\<left>"
+let g:template['c']['i'] = "int ;\<left>"
+let g:template['c']['li'] = "long int ;\<left>"
+let g:template['c']['lli'] = "long long int ;\<left>"
+let g:template['c']['ui'] = "unsigned int ;\<left>"
+let g:template['c']['uli'] = "unsigned long int ;\<left>"
+let g:template['c']['ulli'] = "unsigned long long int ;\<left>"
+let g:template['c']['fl'] = "float ;\<left>"
+let g:template['c']['dl'] = "double ;\<left>"
 
 " ---------------------------------------------
 " C++ templates
 let g:template['cpp'] = g:template['c']
+let g:template['hpp'] = g:template['cpp']
+let g:template['cpp']['ci'] = "class ".g:rs."class_name".g:re."{\<cr>public:\<cr>private:\<cr>protected:\<cr>};"
+let g:template['cpp']['cl'] = "class ".g:rs."class_name".g:re."{\<cr>public:\<cr>".g:rs."class_name".g:re."(){\<cr>}\<cr>~".g:rs."class_name".g:re."(){\<cr>}\<cr>private:\<cr>protected:\<cr>};"
+
+" ---------------------------------------------
+" C header
+let g:template['h'] = {}
+let g:template['h']['cm'] = g:template['c']['cm']
+let g:template['h']['cmm'] = g:template['c']['cmm']
+let g:template['h']['de'] = g:template['c']['de']
+let g:template['h']['un'] = g:template['c']['un']
+let g:template['h']['pr'] = g:template['c']['pr']
+let g:template['h']['in'] = g:template['c']['in']
+let g:template['h']['is'] = g:template['c']['is']
+let g:template['h']['ff'] = g:template['c']['ff']
+let g:template['h']['ci'] = "class ".g:rs."class_name".g:re."{\<cr>public:\<cr>private:\<cr>protected:\<cr>};"
+let g:template['h']['cl'] = "class ".g:rs."class_name".g:re."{\<cr>public:\<cr>".g:rs."class_name".g:re."();\<cr>~".g:rs."class_name".g:re."();\<cr>private:\<cr>protected:\<cr>};"
+let g:template['h']['mv'] = "void ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mpv'] = "void *".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mi'] = "int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mli'] = "long int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mlli'] = "long long int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mui'] = "unsigned int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['muli'] = "unsigned long int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mulli'] = "unsigned long long int ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mc'] = "char ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mpc'] = "char *".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mcc'] = "const char *".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['mf'] = "float ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['md'] = "double ".g:rs."method".g:re."(".g:rs."args".g:re.");"
+let g:template['h']['ts'] = g:template['c']['ts']
+let g:template['h']['st'] = g:template['c']['st']
+let g:template['h']['pv'] = g:template['c']['pv']
+let g:template['h']['ch'] = g:template['c']['ch']
+let g:template['h']['cc'] = g:template['c']['cc']
+let g:template['h']['pc'] = g:template['c']['pc']
+let g:template['h']['i'] = g:template['c']['i']
+let g:template['h']['li'] = g:template['c']['li']
+let g:template['h']['lli'] = g:template['c']['lli']
+let g:template['h']['ui'] = g:template['c']['ui']
+let g:template['h']['uli'] = g:template['c']['uli']
+let g:template['h']['ulli'] = g:template['c']['ulli']
+let g:template['h']['fl'] = g:template['c']['fl']
+let g:template['h']['dl'] = g:template['c']['dl']
 
 " ---------------------------------------------
 " common templates
 let g:template['_'] = {}
 let g:template['_']['xt'] = "\<c-r>=strftime(\"%Y-%m-%d %H:%M:%S\")\<cr>"
+
+" ---------------------------------------------
+" project_description
+let $division = " ===================================================="
+let $card  = "\<cr>"
+let $card .= "   FILE NAME:  ".expand("%")
+let $card .= "\<cr>"
+let $card .= "\<cr>".repeat("\<backspace>",3)
+let $card .= " DESCRIPTION:  `<Description>`"
+let $card .= "\<cr>".repeat("\<backspace>",1)
+let $card .= "\<cr>"
+let $card .= "     VERSION:  1.0"
+let $card .= "\<cr>"
+let $card .= "CREATED:  \<c-r>=strftime(\"%Y-%m-%d %H:%M:%S\")\<cr>"
+let $card .= "\<cr>"
+let $card .= "REVISON:  `<Revision>`"
+let $card .= "\<cr>".repeat("\<backspace>",1)
+let $card .= "COMPILER:  GCC/G++"
+let $card .= "\<cr>"
+let $card .= "\<cr>"
+let $card .= "  AUTHOR:  `<Author>`"
+let $card .= "\<cr>"
+let $card .= "E-MAIL:  `<Mail>`"
+let $card .= "\<cr>"
+let $card .= "\<cr>".repeat("\<backspace>",6)
+let $card .= "ORGANIZATION:  `<ORG>`"
+let $card .= "\<cr>".repeat("\<backspace>",1)
+let g:template['c']['info'] = "//".$division."\<cr>".$card."\<cr>".$division."<\<cr>".repeat("\<backspace>",3)."\<cr>`<code>`"
+let g:template['h']['info'] = g:template['c']['info']
 
 " ---------------------------------------------
 " load user defined snippets
